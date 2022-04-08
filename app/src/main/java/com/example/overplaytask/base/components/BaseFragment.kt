@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.LinearLayout
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import androidx.viewbinding.ViewBinding
@@ -87,6 +88,7 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel> : Fragment() {
 
         val root = FragmentBaseBinding.inflate(layoutInflater)
         toolbar = root.toolbar
+        toolbar?.isVisible = false
         _binding = bindingInflater.invoke(inflater, container, false)
         root.root.addView(binding.root, LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT))
         viewModel = ViewModelProvider(this, factory).get(getViewModelKClass().java)

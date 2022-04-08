@@ -6,4 +6,7 @@ import javax.inject.Inject
 abstract class MainFragmentViewModel : BaseViewModel() {
 }
 
-class MainFragmentViewModelImpl  @Inject constructor(): MainFragmentViewModel()
+class MainFragmentViewModelImpl  @Inject constructor(): MainFragmentViewModel(){
+
+
+}
