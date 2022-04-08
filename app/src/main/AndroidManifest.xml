@@ -12,6 +12,7 @@
         android:theme="@style/Theme.OverPlayTask">
         <activity
             android:name=".ui.main.MainActivity"
+            android:theme="@style/AppTheme"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

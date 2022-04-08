@@ -11,6 +11,7 @@ import androidx.viewbinding.ViewBinding
 import com.example.overplaytask.base.di.ComponentProvider
 import com.example.overplaytask.base.di.activity.ActivityComponent
 import com.example.overplaytask.base.di.qualifiers.ActivityViewModelFactory
+import com.example.overplaytask.utils.Router
 import com.example.overplaytask.utils.toast
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -25,9 +26,9 @@ abstract class BaseActivity<VB : ViewBinding, VM : BaseViewModel> : AppCompatAct
 
     lateinit var component: ActivityComponent
 
-//    @Inject
-//    lateinit var router: Router
-//
+    @Inject
+    lateinit var router: Router
+
     @Inject
     @ActivityViewModelFactory
     lateinit var factory: ViewModelProvider.Factory
@@ -40,11 +41,7 @@ abstract class BaseActivity<VB : ViewBinding, VM : BaseViewModel> : AppCompatAct
     }
 
     protected open fun onError(throwable: Throwable) {
-//        if (BuildConfig.DEBUG) {
-//            toast(throwable.localizedMessage ?: getString(R.string.chat_default_error))
-//        } else {
-        toast("Error")
-//        }
+        toast(throwable.localizedMessage)
     }
 
 
@@ -54,7 +51,7 @@ abstract class BaseActivity<VB : ViewBinding, VM : BaseViewModel> : AppCompatAct
                 .activityComponent()
                 .create(this)
             injectWith(component)
-//            router.attach(this, getNavHostId())
+            router.attach(this, getNavHostId())
 
         viewModel = ViewModelProvider(this, factory).get(getViewModelKClass().java)
 
