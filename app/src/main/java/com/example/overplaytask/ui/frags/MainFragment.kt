@@ -35,6 +35,21 @@ class MainFragment : BaseFragment<FragmentMianBinding, MainFragmentViewModel>() 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        createSubscriptions()
+    }
+
+    private fun createSubscriptions() {
+        with(binding){
+            launchForFlow {
+                viewModel.dataFlow.collect{
+                    with(it.restartVideo){
+                        if (this){
+                            player?.seekTo(0)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun attachPlayer() {

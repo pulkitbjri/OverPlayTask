@@ -11,6 +11,8 @@ import com.example.overplaytask.base.di.activity.ActivityComponent
 import com.example.overplaytask.databinding.ActivityMainBinding
 import com.example.overplaytask.exts.PermissionResponseHandler
 import com.example.overplaytask.exts.withAllPermissions
+import com.example.overplaytask.useCases.LastLocationUseCase
+import javax.inject.Inject
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() {
 
@@ -19,6 +21,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
     }
     override fun getNavHostId() = R.id.globalNavFragment
 
+    @Inject
+    lateinit var lastLocationUseCase: LastLocationUseCase
 
     override fun injectWith(component: ActivityComponent) {
         component.inject(this)
@@ -33,7 +37,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
             Manifest.permission.ACCESS_COARSE_LOCATION,
             responseHandler = object : PermissionResponseHandler {
                 override fun onPermissionGranted() {
-//                    lastLocationUseCase.initialize()
+                    lastLocationUseCase.initialize()
                 }
 
                 override fun onPermissionRejected() {

@@ -4,6 +4,7 @@ import com.example.overplaytask.App
 import com.example.overplaytask.base.di.activity.ActivityComponent
 import com.example.overplaytask.base.di.activity.ActivityViewModelModule
 import com.example.overplaytask.base.di.modules.AppModule
+import com.example.overplaytask.base.di.modules.UseCaseBinding
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -13,7 +14,8 @@ import javax.inject.Singleton
     modules = [
         AppModule::class,
         AppSubComponentsModule::class,
-        ActivityViewModelModule::class
+        ActivityViewModelModule::class,
+        UseCaseBinding::class
     ]
 )
 interface AppComponent {
