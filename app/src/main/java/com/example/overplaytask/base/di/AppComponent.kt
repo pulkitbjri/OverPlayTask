@@ -1,7 +1,9 @@
 package com.example.overplaytask.base.di
 
-import com.example.overplaytask.Application
+import com.example.overplaytask.App
 import com.example.overplaytask.base.di.activity.ActivityComponent
+import com.example.overplaytask.base.di.activity.ActivityViewModelModule
+import com.example.overplaytask.base.di.modules.AppModule
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -9,36 +11,21 @@ import javax.inject.Singleton
 @Singleton
 @Component(
     modules = [
-//        WorkerModule::class,
-//        AppModule::class,
-//        AmplifyDownloaderModule::class,
-//        DBModule::class,
-//        ApiInterceptorModule::class,
-//        ApiModule::class,
-//        RetrofitModule::class,
-//        PrefsModule::class,
-//        PrefsBinding::class,
-//        ValidatorModule::class,
-//        AppSubComponentsModule::class,
-//        UseCaseBinding::class,
-//        SecondUseCaseBinding::class,
-//        EventBinding::class,
-//        AnalyticsBinding::class,
-//        NetworkDataSourceBinding::class,
-//        CacheDataSourceBinding::class,
-//        MainViewModelModule::class
+        AppModule::class,
+        AppSubComponentsModule::class,
+        ActivityViewModelModule::class
     ]
 )
 interface AppComponent {
 
     @Component.Factory
     interface Factory {
-        fun create(@BindsInstance application: Application): AppComponent
+        fun create(@BindsInstance app: App): AppComponent
     }
 
     fun activityComponent(): ActivityComponent.Factory
 
-    fun inject(application: Application)
+    fun inject(app: App)
 
 //    fun inject(messagingService: FirebaseService)
 //

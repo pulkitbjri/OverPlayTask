@@ -1,4 +1,4 @@
-package com.example.overplaytask.base.di
+package com.example.overplaytask.base.di.fragment
 
 import androidx.fragment.app.Fragment
 import com.natife.eezy.di.scope.FragmentScope
@@ -8,9 +8,8 @@ import dagger.Subcomponent
 @FragmentScope
 @Subcomponent(
     modules = [
-//        FragmentModule::class,
-//        ViewModelModule::class,
-//        ChatBotBinding::class
+        FragmentModule::class,
+        ViewModelModule::class,
     ]
 )
 interface FragmentComponent {

@@ -6,7 +6,7 @@ import com.example.overplaytask.base.di.AppComponent
 import com.example.overplaytask.base.di.ComponentProvider
 import com.example.overplaytask.base.di.DaggerAppComponent
 
-class Application : Application(), ComponentProvider {
+class App : Application(), ComponentProvider {
     private lateinit var appComponent: AppComponent
     companion object {
         lateinit var INSTANCE: Application

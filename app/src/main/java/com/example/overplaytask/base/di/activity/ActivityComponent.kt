@@ -1,8 +1,8 @@
 package com.example.overplaytask.base.di.activity
 
 import com.example.overplaytask.base.components.BaseActivity
-import com.example.overplaytask.ui.MainActivity
-import com.example.overplaytask.base.di.FragmentComponent
+import com.example.overplaytask.ui.main.MainActivity
+import com.example.overplaytask.base.di.fragment.FragmentComponent
 import com.example.overplaytask.base.di.scopes.ActivityScope
 import dagger.BindsInstance
 import dagger.Subcomponent
@@ -10,7 +10,7 @@ import dagger.Subcomponent
 @ActivityScope
 @Subcomponent(
     modules = [
-        ActivitySubComponents::class
+        ActivitySubComponents::class,
     ]
 )
 interface ActivityComponent {
