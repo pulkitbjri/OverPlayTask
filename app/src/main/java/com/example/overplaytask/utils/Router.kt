@@ -25,7 +25,10 @@ class Router @Inject constructor() {
 
     @IdRes
     private var navHostId: Int? = null
-
+    fun detach() {
+        activity = null
+        navHostId = null
+    }
     fun attach(activity: AppCompatActivity, @IdRes navHostId: Int) {
         this.activity = activity
         this.navHostId = navHostId

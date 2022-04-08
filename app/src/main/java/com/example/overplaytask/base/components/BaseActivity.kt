@@ -46,7 +46,6 @@ abstract class BaseActivity<VB : ViewBinding, VM : BaseViewModel> : AppCompatAct
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-//        setTheme(R.style.AppTheme)
             component = (application as ComponentProvider).provideAppComponent()
                 .activityComponent()
                 .create(this)
@@ -68,7 +67,7 @@ abstract class BaseActivity<VB : ViewBinding, VM : BaseViewModel> : AppCompatAct
 
     override fun onDestroy() {
         super.onDestroy()
-//        router.detach()
+        router.detach()
     }
 
     protected fun launch(block: suspend CoroutineScope.() -> Unit): Job {

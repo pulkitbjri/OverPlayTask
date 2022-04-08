@@ -21,6 +21,10 @@ class MainFragment : BaseFragment<FragmentMianBinding, MainFragmentViewModel>() 
 
     override fun injectWith(component: FragmentComponent) = component.inject(this)
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
 
 
 }
