@@ -32,10 +32,10 @@ class MainFragment : BaseFragment<FragmentMianBinding, MainFragmentViewModel>() 
 
     override fun injectWith(component: FragmentComponent) = component.inject(this)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         createSubscriptions()
+
     }
 
     private fun createSubscriptions() {
@@ -45,6 +45,11 @@ class MainFragment : BaseFragment<FragmentMianBinding, MainFragmentViewModel>() 
                     with(it.restartVideo){
                         if (this){
                             player?.seekTo(0)
+                        }
+                    }
+                    with(it.valPauseVideo){
+                        if (this){
+                            player?.pause()
                         }
                     }
                 }

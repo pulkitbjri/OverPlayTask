@@ -1,9 +1,6 @@
 package com.example.overplaytask.base.di.modules
 
-import com.example.overplaytask.useCases.CalculateDistanceUseCase
-import com.example.overplaytask.useCases.CalculateDistanceUseCaseImpl
-import com.example.overplaytask.useCases.LastLocationUseCase
-import com.example.overplaytask.useCases.LastLocationUseCaseImpl
+import com.example.overplaytask.useCases.*
 import dagger.Binds
 import dagger.Module
 import javax.inject.Singleton
@@ -16,4 +13,8 @@ interface UseCaseBinding {
 
     @Binds
     fun calculateDistanceUseCase(useCase: CalculateDistanceUseCaseImpl): CalculateDistanceUseCase
+
+    @Binds
+    @Singleton
+    fun detectShakeUseCase(useCase: DetectShakeUseCaseImpl): DetectShakeUseCase
 }

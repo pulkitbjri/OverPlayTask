@@ -21,8 +21,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
     }
     override fun getNavHostId() = R.id.globalNavFragment
 
-    @Inject
-    lateinit var lastLocationUseCase: LastLocationUseCase
 
     override fun injectWith(component: ActivityComponent) {
         component.inject(this)
@@ -37,7 +35,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
             Manifest.permission.ACCESS_COARSE_LOCATION,
             responseHandler = object : PermissionResponseHandler {
                 override fun onPermissionGranted() {
-                    lastLocationUseCase.initialize()
+                    viewModel.initLocation()
                 }
 
                 override fun onPermissionRejected() {
