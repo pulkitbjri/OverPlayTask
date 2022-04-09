@@ -13,13 +13,13 @@ import javax.inject.Inject
 
 interface DetectRotationUseCase {
     fun initialize()
-    fun getRotationUpdates() : Flow<TaskToPerform>
+    fun getRotationUpdates(): Flow<TaskToPerform>
     fun giveLifecycle(viewModelScope: CoroutineScope)
     fun onPause()
     fun onResume()
 
-    enum class TaskToPerform{
-        FORWARD,PREVIOUS , VOLUME_UP, VOLUME_DOWN , NONE
+    enum class TaskToPerform {
+        FORWARD, PREVIOUS, VOLUME_UP, VOLUME_DOWN, NONE
     }
 }
 
@@ -35,11 +35,14 @@ class DetectRotationUseCaseImpl @Inject constructor(
     override fun giveLifecycle(viewModelScope: CoroutineScope) {
         this.viewModelScope = viewModelScope
     }
+
     override fun initialize() {
         sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
-        sensorManager?.registerListener(sensorListener, sensorManager!!
-                .getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager?.registerListener(
+            sensorListener, sensorManager!!
+                .getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_NORMAL
+        )
 
         acceleration = 10f
     }
@@ -51,31 +54,28 @@ class DetectRotationUseCaseImpl @Inject constructor(
     private val sensorListener: SensorEventListener = object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent) {
 
-                val dT = (event.timestamp - timestamp) * NS2S
-                // Axis of the rotation sample, not normalized yet.
-                var axisX: Float = event.values[0]
-                var axisY: Float = event.values[1]
-                var axisZ: Float = event.values[2]
+            val dT = (event.timestamp - timestamp) * NS2S
+            // Axis of the rotation sample, not normalized yet.
+            var axisX: Float = event.values[0]
+            var axisY: Float = event.values[1]
+            var axisZ: Float = event.values[2]
 
-            if (kotlin.math.abs(axisX) < kotlin.math.abs(axisZ)){
-                if(axisZ > 0.8f) { // anticlockwise
+            if (kotlin.math.abs(axisX) < kotlin.math.abs(axisZ)) {
+                if (axisZ > 0.8f) { // anticlockwise
                     viewModelScope?.launch {
                         shakeFlow.emit(DetectRotationUseCase.TaskToPerform.PREVIOUS)
                     }
-                }
-                else if(axisZ < -0.8f) { // clockwise
+                } else if (axisZ < -0.8f) { // clockwise
                     viewModelScope?.launch {
                         shakeFlow.emit(DetectRotationUseCase.TaskToPerform.FORWARD)
                     }
                 }
-            }
-            else{
-                if(axisX > 0.8f) {
+            } else {
+                if (axisX > 0.8f) {
                     viewModelScope?.launch {
                         shakeFlow.emit(DetectRotationUseCase.TaskToPerform.VOLUME_UP)
                     }
-                }
-                else if(axisX < -0.8f) {
+                } else if (axisX < -0.8f) {
                     viewModelScope?.launch {
                         shakeFlow.emit(DetectRotationUseCase.TaskToPerform.VOLUME_DOWN)
                     }
@@ -84,8 +84,10 @@ class DetectRotationUseCaseImpl @Inject constructor(
 
 
         }
+
         override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
     }
+
     override fun getRotationUpdates(): Flow<DetectRotationUseCase.TaskToPerform> {
         return shakeFlow
     }
@@ -96,8 +98,10 @@ class DetectRotationUseCaseImpl @Inject constructor(
     }
 
     override fun onResume() {
-        sensorManager?.registerListener(sensorListener, sensorManager?.getDefaultSensor(
-            Sensor .TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL
+        sensorManager?.registerListener(
+            sensorListener, sensorManager?.getDefaultSensor(
+                Sensor.TYPE_ACCELEROMETER
+            ), SensorManager.SENSOR_DELAY_NORMAL
         )
     }
 

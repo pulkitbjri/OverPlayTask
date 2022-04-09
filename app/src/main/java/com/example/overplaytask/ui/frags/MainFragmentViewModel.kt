@@ -1,33 +1,33 @@
 package com.example.overplaytask.ui.frags
 
-import android.content.Context
-import android.widget.Toast
 import androidx.lifecycle.viewModelScope
 import com.example.overplaytask.base.components.BaseViewModel
 import com.example.overplaytask.useCases.DetectRotationUseCase
 import com.example.overplaytask.useCases.DetectShakeUseCaseImpl
 import com.example.overplaytask.useCases.LastLocationUseCase
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.debounce
 import javax.inject.Inject
 
 abstract class MainFragmentViewModel : BaseViewModel() {
     data class ViewData(
-        val restartVideo : Boolean = false,
-        val valPauseVideo : Boolean = false,
-        val rotationData : DetectRotationUseCase.TaskToPerform = DetectRotationUseCase.TaskToPerform.NONE,
+        val restartVideo: Boolean = false,
+        val valPauseVideo: Boolean = false,
+        val rotationData: DetectRotationUseCase.TaskToPerform = DetectRotationUseCase.TaskToPerform.NONE,
     )
+
     abstract val dataFlow: StateFlow<ViewData>
     abstract fun initLocation()
 
 }
 
-class MainFragmentViewModelImpl  @Inject constructor(
-    val lastLocationUseCase : LastLocationUseCase,
+class MainFragmentViewModelImpl @Inject constructor(
+    val lastLocationUseCase: LastLocationUseCase,
     val detectShakeUseCaseImpl: DetectShakeUseCaseImpl,
     val detectRotationUseCase: DetectRotationUseCase,
-    val context: Context
-): MainFragmentViewModel(){
+) : MainFragmentViewModel() {
     override val dataFlow = MutableStateFlow(ViewData())
 
     init {
@@ -45,7 +45,6 @@ class MainFragmentViewModelImpl  @Inject constructor(
         launch {
             detectRotationUseCase.giveLifecycle(viewModelScope)
             detectRotationUseCase.getRotationUpdates().debounce(500).collect {
-                Toast.makeText(context,it.toString(),Toast.LENGTH_SHORT).show()
                 dataFlow.value = dataFlow.value.copy(rotationData = it)
             }
         }
@@ -54,12 +53,13 @@ class MainFragmentViewModelImpl  @Inject constructor(
     override fun initLocation() {
         lastLocationUseCase.initialize()
     }
+
     private fun startLocationEvent() {
-       launch {
+        launch {
             delay(8000)  // let location updates adjust for precise location on launch
             lastLocationUseCase.giveLifecycle(viewModelScope)
-            lastLocationUseCase.getLoactionUodates().collect{
-                if (it){
+            lastLocationUseCase.getLoactionUodates().collect {
+                if (it) {
                     dataFlow.value = dataFlow.value.copy(restartVideo = true)
 //                    Toast.makeText(context,"Walked 10 mtrs", Toast.LENGTH_SHORT).show()
                     delay(1000)
@@ -70,9 +70,9 @@ class MainFragmentViewModelImpl  @Inject constructor(
     }
 
     private fun startShakeEvent() {
-       launch {
-           detectShakeUseCaseImpl.giveLifecycle(viewModelScope)
-           detectShakeUseCaseImpl.getShakeUpdates().debounce(1000).collect {
+        launch {
+            detectShakeUseCaseImpl.giveLifecycle(viewModelScope)
+            detectShakeUseCaseImpl.getShakeUpdates().debounce(1000).collect {
                 if (it) {
                     dataFlow.value = dataFlow.value.copy(valPauseVideo = true)
                     delay(500)

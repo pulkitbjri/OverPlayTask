@@ -2,13 +2,10 @@ package com.example.overplaytask.ui.frags
 
 import android.Manifest
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.overplaytask.R
 import com.example.overplaytask.base.components.BaseFragment
-import com.example.overplaytask.base.components.BaseViewModel
 import com.example.overplaytask.base.di.fragment.FragmentComponent
 import com.example.overplaytask.databinding.FragmentMianBinding
 import com.example.overplaytask.exts.PermissionResponseHandler
@@ -16,23 +13,21 @@ import com.example.overplaytask.exts.withAllPermissions
 import com.example.overplaytask.useCases.DetectRotationUseCase
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-
-import com.google.android.exoplayer2.trackselection.TrackSelector
 import com.google.android.exoplayer2.util.Util
 
 
 class MainFragment : BaseFragment<FragmentMianBinding, MainFragmentViewModel>() {
-    var CONTENT_URL = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4"
+    var CONTENT_URL =
+        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4"
     private var player: ExoPlayer? = null
     private var playWhenReady = true
     private var currentWindow = 0
     private var playbackPosition = 0L
 
-    override val bindingInflater = { layoutInflater: LayoutInflater, viewGroup: ViewGroup?, b: Boolean ->
-        FragmentMianBinding.inflate(layoutInflater, viewGroup, b)
-    }
+    override val bindingInflater =
+        { layoutInflater: LayoutInflater, viewGroup: ViewGroup?, b: Boolean ->
+            FragmentMianBinding.inflate(layoutInflater, viewGroup, b)
+        }
 
     override fun injectWith(component: FragmentComponent) = component.inject(this)
 
@@ -55,26 +50,27 @@ class MainFragment : BaseFragment<FragmentMianBinding, MainFragmentViewModel>() 
     }
 
     private fun createSubscriptions() {
-        with(binding){
+        with(binding) {
             launchForFlow {
-                viewModel.dataFlow.collect{
-                    with(it.restartVideo){
-                        if (this){
+                viewModel.dataFlow.collect {
+                    with(it.restartVideo) {
+                        if (this) {
                             player?.seekTo(0)
                         }
                     }
-                    with(it.valPauseVideo){
-                        if (this){
+                    with(it.valPauseVideo) {
+                        if (this) {
                             player?.pause()
                         }
                     }
-                    with(it.rotationData){
-                        when(this){
+                    with(it.rotationData) {
+                        when (this) {
                             DetectRotationUseCase.TaskToPerform.FORWARD -> player?.seekForward()
                             DetectRotationUseCase.TaskToPerform.PREVIOUS -> player?.seekBack()
                             DetectRotationUseCase.TaskToPerform.VOLUME_UP -> player?.increaseDeviceVolume()
                             DetectRotationUseCase.TaskToPerform.VOLUME_DOWN -> player?.decreaseDeviceVolume()
-                            DetectRotationUseCase.TaskToPerform.NONE -> {}
+                            DetectRotationUseCase.TaskToPerform.NONE -> {
+                            }
                         }
                     }
                 }
@@ -83,7 +79,7 @@ class MainFragment : BaseFragment<FragmentMianBinding, MainFragmentViewModel>() 
     }
 
     private fun attachPlayer() {
-        with(binding){
+        with(binding) {
             player = ExoPlayer.Builder(requireContext())
                 .build()
                 .also { exoPlayer ->
@@ -103,24 +99,28 @@ class MainFragment : BaseFragment<FragmentMianBinding, MainFragmentViewModel>() 
             attachPlayer()
         }
     }
+
     public override fun onResume() {
         super.onResume()
         if ((Util.SDK_INT < 24 || player == null)) {
             attachPlayer()
         }
     }
+
     public override fun onPause() {
         super.onPause()
         if (Util.SDK_INT < 24) {
             releasePlayer()
         }
     }
+
     public override fun onStop() {
         super.onStop()
         if (Util.SDK_INT >= 24) {
             releasePlayer()
         }
     }
+
     private fun releasePlayer() {
         player?.run {
             playbackPosition = this.currentPosition

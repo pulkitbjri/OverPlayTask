@@ -7,22 +7,19 @@ import android.location.Location
 import android.location.LocationManager
 import android.os.Build
 import android.provider.Settings
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.coroutines.suspendCoroutine
 
 interface LastLocationUseCase {
     fun execute(): Location?
     fun initialize()
-    fun getLoactionUodates() : Flow<Boolean>
+    fun getLoactionUodates(): Flow<Boolean>
     fun giveLifecycle(viewModelScope: CoroutineScope)
 }
 
@@ -48,11 +45,15 @@ class LastLocationUseCaseImpl @Inject constructor(
     private fun sendDistance() {
 
         viewModelScope?.launch {
-            lastLocation?: return@launch
-            initialLocation?: return@launch
-            val distance = calculateDistanceUseCase.getDistanceInKm(initialLocation!!.latitude,initialLocation!!.longitude
-                , lastLocation!!.latitude,lastLocation!!.longitude)
-            if (distance > 10.0){
+            lastLocation ?: return@launch
+            initialLocation ?: return@launch
+            val distance = calculateDistanceUseCase.getDistanceInKm(
+                initialLocation!!.latitude,
+                initialLocation!!.longitude,
+                lastLocation!!.latitude,
+                lastLocation!!.longitude
+            )
+            if (distance > 10.0) {
                 distanceFlow.emit(true)
                 initialLocation = lastLocation
             }
@@ -72,7 +73,10 @@ class LastLocationUseCaseImpl @Inject constructor(
 
     override fun initialize() {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
         ) {
             return
         }
@@ -99,14 +103,14 @@ class LastLocationUseCaseImpl @Inject constructor(
 
     private fun isLocationPermissionGranted(): Boolean {
         return !(
-            ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-            )
+                ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+                )
     }
 
     private fun isLocationEnabled(): Boolean {
