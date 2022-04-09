@@ -65,19 +65,13 @@ class DetectShakeUseCaseImpl @Inject constructor(
             val z = event.values[2]
             lastAcceleration = currentAcceleration
 
-            // Getting current accelerations
-            // with the help of fetched x,y,z values
             currentAcceleration = sqrt((x * x + y * y + z * z).toDouble()).toFloat()
             val delta: Float = currentAcceleration - lastAcceleration
             acceleration = acceleration * 0.9f + delta
 
-            // Display a Toast message if
-            // acceleration value is over 12
             if (acceleration > 12) {
                 viewModelScope?.launch {
                     shakeFlow.emit(true)
-                    delay(1000)
-                    shakeFlow.emit(false)
                 }
             }
         }

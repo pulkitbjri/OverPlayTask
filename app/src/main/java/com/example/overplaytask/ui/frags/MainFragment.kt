@@ -13,6 +13,7 @@ import com.example.overplaytask.base.di.fragment.FragmentComponent
 import com.example.overplaytask.databinding.FragmentMianBinding
 import com.example.overplaytask.exts.PermissionResponseHandler
 import com.example.overplaytask.exts.withAllPermissions
+import com.example.overplaytask.useCases.DetectRotationUseCase
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -65,6 +66,15 @@ class MainFragment : BaseFragment<FragmentMianBinding, MainFragmentViewModel>() 
                     with(it.valPauseVideo){
                         if (this){
                             player?.pause()
+                        }
+                    }
+                    with(it.rotationData){
+                        when(this){
+                            DetectRotationUseCase.TaskToPerform.FORWARD -> player?.seekForward()
+                            DetectRotationUseCase.TaskToPerform.PREVIOUS -> player?.seekBack()
+                            DetectRotationUseCase.TaskToPerform.VOLUME_UP -> player?.increaseDeviceVolume()
+                            DetectRotationUseCase.TaskToPerform.VOLUME_DOWN -> player?.decreaseDeviceVolume()
+                            DetectRotationUseCase.TaskToPerform.NONE -> {}
                         }
                     }
                 }

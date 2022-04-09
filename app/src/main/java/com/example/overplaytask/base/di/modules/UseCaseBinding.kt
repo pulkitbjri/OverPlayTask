@@ -17,4 +17,8 @@ interface UseCaseBinding {
     @Binds
     @Singleton
     fun detectShakeUseCase(useCase: DetectShakeUseCaseImpl): DetectShakeUseCase
+
+    @Binds
+    @Singleton
+    fun detectRotationUseCase(useCase: DetectRotationUseCaseImpl): DetectRotationUseCase
 }
