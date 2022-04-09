@@ -27,6 +27,7 @@ import kotlin.coroutines.suspendCoroutine
 interface DetectShakeUseCase {
     fun initialize()
     fun getShakeUpdates() : Flow<Boolean>
+    fun giveLifecycle(viewModelScope: CoroutineScope)
     fun onPause()
     fun onResume()
 }
@@ -39,8 +40,12 @@ class DetectShakeUseCaseImpl @Inject constructor(
     private var acceleration = 0f
     private var currentAcceleration = 0f
     private var lastAcceleration = 0f
+    private var viewModelScope: CoroutineScope? = null
 
     private val shakeFlow = MutableSharedFlow<Boolean>()
+    override fun giveLifecycle(viewModelScope: CoroutineScope) {
+        this.viewModelScope = viewModelScope
+    }
     override fun initialize() {
         sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
@@ -62,17 +67,17 @@ class DetectShakeUseCaseImpl @Inject constructor(
 
             // Getting current accelerations
             // with the help of fetched x,y,z values
-            currentAcceleration = kotlin.math.sqrt((x * x + y * y + z * z).toDouble()).toFloat()
+            currentAcceleration = sqrt((x * x + y * y + z * z).toDouble()).toFloat()
             val delta: Float = currentAcceleration - lastAcceleration
             acceleration = acceleration * 0.9f + delta
 
             // Display a Toast message if
             // acceleration value is over 12
             if (acceleration > 12) {
-                GlobalScope.launch {
+                viewModelScope?.launch {
                     shakeFlow.emit(true)
-                    delay(1000000)
-//                    shakeFlow.emit(false)
+                    delay(1000)
+                    shakeFlow.emit(false)
                 }
             }
         }
@@ -83,14 +88,14 @@ class DetectShakeUseCaseImpl @Inject constructor(
     }
 
     override fun onPause() {
-        sensorManager?.unregisterListener(sensorListener)
+//        sensorManager?.unregisterListener(sensorListener)
 
     }
 
     override fun onResume() {
-        sensorManager?.registerListener(sensorListener, sensorManager?.getDefaultSensor(
-            Sensor .TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL
-        )
+//        sensorManager?.registerListener(sensorListener, sensorManager?.getDefaultSensor(
+//            Sensor .TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL
+//        )
     }
 
 

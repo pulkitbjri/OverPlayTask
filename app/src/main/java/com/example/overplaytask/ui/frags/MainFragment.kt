@@ -1,5 +1,6 @@
 package com.example.overplaytask.ui.frags
 
+import android.Manifest
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,6 +11,8 @@ import com.example.overplaytask.base.components.BaseFragment
 import com.example.overplaytask.base.components.BaseViewModel
 import com.example.overplaytask.base.di.fragment.FragmentComponent
 import com.example.overplaytask.databinding.FragmentMianBinding
+import com.example.overplaytask.exts.PermissionResponseHandler
+import com.example.overplaytask.exts.withAllPermissions
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -35,7 +38,19 @@ class MainFragment : BaseFragment<FragmentMianBinding, MainFragmentViewModel>() 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         createSubscriptions()
+        withAllPermissions(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            responseHandler = object : PermissionResponseHandler {
+                override fun onPermissionGranted() {
+                    viewModel.initLocation()
+                }
 
+                override fun onPermissionRejected() {
+
+                }
+            }
+        )
     }
 
     private fun createSubscriptions() {

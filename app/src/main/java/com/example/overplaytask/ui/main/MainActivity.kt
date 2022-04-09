@@ -30,18 +30,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        withAllPermissions(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            responseHandler = object : PermissionResponseHandler {
-                override fun onPermissionGranted() {
-                    viewModel.initLocation()
-                }
 
-                override fun onPermissionRejected() {
-
-                }
-            }
-        )
     }
 }

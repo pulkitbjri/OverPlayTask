@@ -23,6 +23,7 @@ interface LastLocationUseCase {
     fun execute(): Location?
     fun initialize()
     fun getLoactionUodates() : Flow<Boolean>
+    fun giveLifecycle(viewModelScope: CoroutineScope)
 }
 
 class LastLocationUseCaseImpl @Inject constructor(
@@ -30,6 +31,7 @@ class LastLocationUseCaseImpl @Inject constructor(
     private val calculateDistanceUseCase: CalculateDistanceUseCase
 ) : LastLocationUseCase {
 
+    private var viewModelScope: CoroutineScope? = null
     private var lastLocation: Location? = null
     private var initialLocation: Location? = null
     private val distanceFlow = MutableSharedFlow<Boolean>()
@@ -45,7 +47,7 @@ class LastLocationUseCaseImpl @Inject constructor(
 
     private fun sendDistance() {
 
-        GlobalScope.launch {
+        viewModelScope?.launch {
             lastLocation?: return@launch
             initialLocation?: return@launch
             val distance = calculateDistanceUseCase.getDistanceInKm(initialLocation!!.latitude,initialLocation!!.longitude
@@ -89,6 +91,10 @@ class LastLocationUseCaseImpl @Inject constructor(
 
     override fun getLoactionUodates(): Flow<Boolean> {
         return distanceFlow
+    }
+
+    override fun giveLifecycle(viewModelScope: CoroutineScope) {
+        this.viewModelScope = viewModelScope
     }
 
     private fun isLocationPermissionGranted(): Boolean {
