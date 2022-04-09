@@ -80,9 +80,7 @@ class MainFragment : BaseFragment<FragmentMianBinding, MainFragmentViewModel>() 
     }
 
     private fun attachPlayer() {
-        launch {
             with(binding) {
-                delay(4000)
                 player = ExoPlayer.Builder(requireContext())
                     .build()
                     .also { exoPlayer ->
@@ -94,7 +92,6 @@ class MainFragment : BaseFragment<FragmentMianBinding, MainFragmentViewModel>() 
                         exoPlayer.prepare()
                     }
             }
-        }
 
     }
 

@@ -49,12 +49,15 @@ class DetectRotationUseCaseImpl @Inject constructor(
 
     private val NS2S = 1.0f / 1000000000.0f
     private val deltaRotationVector = FloatArray(4) { 0f }
-    private var timestamp: Float = 0f
+    private var timestamp: Long = System.currentTimeMillis()
 
     private val sensorListener: SensorEventListener = object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent) {
-
-            val dT = (event.timestamp - timestamp) * NS2S
+            val time = System.currentTimeMillis()
+            if (timestamp + 1000 > time) {
+                return
+            }
+            timestamp = time
             // Axis of the rotation sample, not normalized yet.
             var axisX: Float = event.values[0]
             var axisY: Float = event.values[1]
