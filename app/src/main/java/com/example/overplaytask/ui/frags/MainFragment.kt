@@ -14,6 +14,7 @@ import com.example.overplaytask.useCases.DetectRotationUseCase
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.util.Util
+import kotlinx.coroutines.delay
 
 
 class MainFragment : BaseFragment<FragmentMianBinding, MainFragmentViewModel>() {
@@ -79,18 +80,22 @@ class MainFragment : BaseFragment<FragmentMianBinding, MainFragmentViewModel>() 
     }
 
     private fun attachPlayer() {
-        with(binding) {
-            player = ExoPlayer.Builder(requireContext())
-                .build()
-                .also { exoPlayer ->
-                    playerMain.player = exoPlayer
-                    val mediaItem = MediaItem.fromUri(CONTENT_URL)
-                    exoPlayer.setMediaItem(mediaItem)
-                    exoPlayer.playWhenReady = playWhenReady
-                    exoPlayer.seekTo(currentWindow, playbackPosition)
-                    exoPlayer.prepare()
-                }
+        launch {
+            with(binding) {
+                delay(4000)
+                player = ExoPlayer.Builder(requireContext())
+                    .build()
+                    .also { exoPlayer ->
+                        playerMain.player = exoPlayer
+                        val mediaItem = MediaItem.fromUri(CONTENT_URL)
+                        exoPlayer.setMediaItem(mediaItem)
+                        exoPlayer.playWhenReady = playWhenReady
+                        exoPlayer.seekTo(currentWindow, playbackPosition)
+                        exoPlayer.prepare()
+                    }
+            }
         }
+
     }
 
     public override fun onStart() {
